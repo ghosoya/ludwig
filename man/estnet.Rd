@@ -46,4 +46,3 @@ This function accepts a binary matrix of network states and estimates
 \code{\link[glmnet]{glmnet}}, \code{\link[glmnet]{cv.glmnet}}, \code{\link[glmnet]{predict.cv.glmnet}},
     \code{\link[stats]{glm}}
 }
-

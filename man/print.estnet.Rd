@@ -14,4 +14,3 @@ This function prints the weights and
     thresholds of the estimated network as well as 
     other useful information.
 }
-
