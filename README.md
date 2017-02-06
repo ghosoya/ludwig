@@ -5,7 +5,7 @@ thresholds of an undirected network given a matrix of binary states.
 Internally, ludwig uses the R-packages glmnet and glm.
 
 In addition, it provides some functionality to visualize the network 
-structure using qgraph as well as a some means to simulate data from 
+structure using qgraph as well as some means to simulate data from 
 a network using conditional distributions.
 
 Please note that this is a development version.
