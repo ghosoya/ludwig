@@ -143,25 +143,27 @@ plot.estnet<-function(x, ...)
 #'     thresholds of the estimated network as well as 
 #'     other useful information.
 #'     
-#' @param netobj An object of class \code{estnet}
-print.estnet<-function(netobj)
+#' @param x An object of class \code{estnet}
+#' @param ... other arguments (not used)
+#' @export
+print.estnet<-function(x,...)
 {
   cat("Thresholds:\n")
-  cat(netobj$thresholds, "\n\n")
+  cat(x$thresholds, "\n\n")
   cat("Weights:\n")
-  print(netobj$weights)
-  cat("\n Number of nodes: ", netobj$k)
-  cat("\n Number of state vectors: ", netobj$n, "\n")
-  cat("\n Number of data points:", length(netobj$y))
-  cat("\n Number of parameters:", netobj$n_param)
-  cat("\n log-Pseudolikelihood: ", netobj$logL)
-  cat("\n Deviance: ", netobj$deviance)
+  print(x$weights)
+  cat("\n Number of nodes: ", x$k)
+  cat("\n Number of state vectors: ", x$n, "\n")
+  cat("\n Number of data points:", length(x$y))
+  cat("\n Number of parameters:", x$n_param)
+  cat("\n log-Pseudolikelihood: ", x$logL)
+  cat("\n Deviance: ", x$deviance)
   cat("\n")
-  cat("\n Method:", netobj$method)
-  if(netobj$method=="glmnet")
+  cat("\n Method:", x$method)
+  if(x$method=="glmnet")
   {
-  cat("\n Alpha: ", netobj$alpha)
-  cat("\n s:", netobj$s)
+  cat("\n Alpha: ", x$alpha)
+  cat("\n s:", x$s)
   }
 }
 ##########################################################

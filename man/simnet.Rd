@@ -39,3 +39,4 @@ This function is intended to simulate data from a binary network given
 # using random updating
 simnet(2, c(1,1,-2), 1000, 1000)
 }
+

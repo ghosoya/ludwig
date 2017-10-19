@@ -43,7 +43,6 @@ Strauss, D. (1992). The many faces of logistic regression. \emph{American Statis
 
 van Borkulo, C., Epskamp, S., & Robitzsch (2014). IsingFit: Fitting Ising models using the eLasso method. R package version 0.3.0.
 }
-
 \examples{
 # Create the coefficients that define a
 # network with four nodes
@@ -79,3 +78,4 @@ plot(coef(net2), coef1, xlab="Estimated", ylab="True")
 
 
 }
+

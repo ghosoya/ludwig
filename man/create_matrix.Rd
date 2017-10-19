@@ -36,3 +36,4 @@ The main purpose of this function is to create
     known as the pseudolikelihood method, supposedly first introduced by Besag (1975).
     Note that the speed of this function is improvable.
 }
+

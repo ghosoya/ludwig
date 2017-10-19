@@ -1,6 +1,6 @@
 Package: ludwig
-Title: Simulating and Estimating Undirected Binary Networks Using the Pseudolikelihood
-    Method
+Title: Simulating and Estimating Undirected Binary Networks Using the
+    Pseudolikelihood Method
 Version: 0.0.1.9000
 Authors@R: person("Georg", "Hosoya", email = "georg.hosoya@fu-berlin.de", role = c("aut", "cre"))
 Description: The package provides some basic functions for simulating,
@@ -10,7 +10,9 @@ Depends:
     R (>= 3.3.2)
 License: GPL-2
 Encoding: UTF-8
-LazyData: true 
-Imports: glmnet (>= 2.0.5), qgraph (>= 1.3.4) 
-RoxygenNote: 6.0.0
+LazyData: true
+Imports:
+    glmnet (>= 2.0.5),
+    qgraph (>= 1.3.4)
+RoxygenNote: 5.0.1
 Date: 2017-02-06

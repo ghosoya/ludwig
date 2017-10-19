@@ -4,13 +4,16 @@
 \alias{print.estnet}
 \title{Print the results}
 \usage{
-\method{print}{estnet}(netobj)
+\method{print}{estnet}(x, ...)
 }
 \arguments{
-\item{netobj}{An object of class \code{estnet}}
+\item{x}{An object of class \code{estnet}}
+
+\item{...}{other arguments (not used)}
 }
 \description{
 This function prints the weights and
     thresholds of the estimated network as well as 
     other useful information.
 }
+

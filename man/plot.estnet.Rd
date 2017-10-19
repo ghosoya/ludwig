@@ -19,3 +19,4 @@ This function plots the estimated network.
 \seealso{
 \code{\link[qgraph]{qgraph}}
 }
+
