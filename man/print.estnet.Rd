@@ -4,7 +4,7 @@
 \alias{print.estnet}
 \title{Print the results}
 \usage{
-\method{print}{estnet}(x, ...)
+print.estnet(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{estnet}}
