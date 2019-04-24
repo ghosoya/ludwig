@@ -40,10 +40,9 @@ This function accepts a binary matrix of network states and estimates
    In this case, the mixing parameter \code{alpha} is set to \code{0.5} 
    (elastic net regularization) and \code{lambda} 
    is chosen based on the solution with mimimum mean cross-validation error 
-   (argument \code{s="lambda.min"} passed to function \code{\link[glmnet]{predict.cv.glmnet}}).
+   (argument \code{s = "lambda.min"} passed to function \code{\link[glmnet]{predict.cv.glmnet}}).
 }
 \seealso{
 \code{\link[glmnet]{glmnet}}, \code{\link[glmnet]{cv.glmnet}}, \code{\link[glmnet]{predict.cv.glmnet}},
     \code{\link[stats]{glm}}
 }
-

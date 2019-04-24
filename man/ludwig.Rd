@@ -43,39 +43,39 @@ Strauss, D. (1992). The many faces of logistic regression. \emph{American Statis
 
 van Borkulo, C., Epskamp, S., & Robitzsch (2014). IsingFit: Fitting Ising models using the eLasso method. R package version 0.3.0.
 }
+
 \examples{
 # Create the coefficients that define a
 # network with four nodes
-coef1<-c(-0.5,-0.5,-0.5,-0.5,1,-1,1,1,-1,1)
+coef1 <- c(-0.5,-0.5,-0.5,-0.5,1,-1,1,1,-1,1)
 
 # Simulate 1000 observations from the network.
 # Use a burnin period of 5000 iterations and
 # random updating.
-dat1<-simnet(4,coef1,5000,1000)
+dat1 <- simnet(4,coef1,5000,1000)
 
 # Try to recover the parameters
 # using the default settings of estnet()
-net1<-estnet(dat1)
+net1 <- estnet(dat1)
   
 # Print the results
 print(net1)
 
 # Try the same with glm()
-net2<-estnet(dat1, method="glm")
+net2 <- estnet(dat1, method="glm")
 
 # Print the results
 print(net2)
 
 # Plot the networks
-plot(net1, labels=c("A", "B", "C", "D"), 
-     maximum=1.5)
-plot(net2, labels=c("A", "B", "C", "D"),
-     maximum=1.5) 
+plot(net1, labels = c("A", "B", "C", "D"), 
+     maximum = 1.5)
+plot(net2, labels = c("A", "B", "C", "D"),
+     maximum = 1.5) 
      
 # Print estimated vs true coefficients
-plot(coef(net1), coef1, xlab="Estimated", ylab="True")
-plot(coef(net2), coef1, xlab="Estimated", ylab="True")
+plot(coef(net1), coef1, xlab = "Estimated", ylab="True")
+plot(coef(net2), coef1, xlab = "Estimated", ylab="True")
 
 
 }
-

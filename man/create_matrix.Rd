@@ -5,10 +5,10 @@
 \title{Create the predictor matrix and the vector of 
 observed node states for pseudolikelihood estimation}
 \usage{
-create_matrix(X)
+create_matrix(data)
 }
 \arguments{
-\item{X}{a binary data matrix containing observed network states. 
+\item{data}{a binary data matrix containing observed network states. 
 The rows represent the states, the columns represent the
 nodes.}
 }
@@ -20,8 +20,6 @@ A list containing...
   \item {\code{y}} {a vector of the observed node states}.
   \item {\code{n}} {the number of observed state vectors}.
   \item {\code{k}} {the number of nodes}.
-  \item {\code{id_index}} {a vectorindicating the states in \code{y}}.
-  \item {\code{link_index}} {a  matrix that identifies the links between the nodes}.
   \item {\code{n_links}} {the number of links in the network}.
   \item {\code{n_param}} {the number of parameters to be estimated}.
   }
@@ -36,4 +34,3 @@ The main purpose of this function is to create
     known as the pseudolikelihood method, supposedly first introduced by Besag (1975).
     Note that the speed of this function is improvable.
 }
-
