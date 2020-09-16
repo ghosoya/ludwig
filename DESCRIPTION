@@ -5,8 +5,9 @@ Version: 0.0.2
 Authors@R: c(person("Georg", "Hosoya", email = "hosoya@gmail.com", role = c("aut", "cre")),
             person("Maximilian", "Bee", email= "r.maximilian.bee@gmail.com", role = c("ctb")))
 Description: The package provides some basic functions for simulating,
-    estimating and plotting binary networks. The estimation function is using the
-    'glmnet' package. The plotting function is using the 'qgraph' package.
+    estimating, plotting and cross-validating binary networks. The estimation function is using the
+    'glmnet' package. The plotting function is using the 'qgraph' package. Bayesian estimation is
+    added via JAGS.
 Depends:
     R (>= 3.5)
 License: GPL-2
