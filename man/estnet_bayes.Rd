@@ -32,6 +32,7 @@ The function returns a list of class \code{\link{estnet_bayes}}, containing...
   \item {\code{merged chains}} { the merged MCMC chains}
   \item {\code{used_samples}} { the actual number of samples to assess the posterior distributions}
   \item {\code{posterior_means}} { the parameter's posterior means}
+  \item {\code{coef}} { the parameter's posterior means}
   \item {\code{posterior_sd}} { the parameter's posterior standard deviations}
   \item {\code{weights}} { a matrix of the network parameter's posterior means}
   \item {\code{weights_sd}} { a matrix of the network parameter's posterior standard deviations}
@@ -44,6 +45,7 @@ The function returns a list of class \code{\link{estnet_bayes}}, containing...
   \item {\code{n_iter}} {number of iterations}
   \item {\code{actual}} {actual iterations used to compute the posterior statistics}
   \item {\code{time}} { the time used for the estimation process}
+  \item {\code{jags}} { the JAGS model object}
   }
 }
 \description{

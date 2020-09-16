@@ -4,14 +4,15 @@
 \alias{plot.estnet_bayes}
 \title{Plot the estimated network}
 \usage{
-\method{plot}{estnet_bayes}(x, thresh = 0, ...)
+\method{plot}{estnet_bayes}(x, z_crit = 0, ...)
 }
 \arguments{
 \item{x}{an object of class \code{estnet_bayes}}
 
-\item{thresh}{a threshold in terms of posterior mean divided by posterior sd. 
+\item{z_crit}{a threshold in terms of posterior mean divided by posterior sd. 
 For instance, setting the threshold to 2 removes all edges for which the 
-absolute qoutient of posterior mean and posterior sd is smaller than 2.
+absolute qoutient of posterior mean and posterior sd is smaller than 2. 
+The value is similar to a critical z-value.
 This is useful for removing edges with small parameter values.}
 
 \item{...}{other arguments passed over to \code{qgraph}}

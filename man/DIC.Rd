@@ -9,13 +9,13 @@ DIC(x, ...)
 \arguments{
 \item{x}{an object of class \code{estnet_bayes}}
 
-\item{...}{other arguments passed over to \code{qgraph}}
+\item{...}{other arguments passed over to \code{dic.samples()}}
 }
 \description{
-This function is a wrapper around \code{DIC} to be found 
-    in the \code{coda} package. It allows for assessing the 
+This function is a wrapper around \code{rjags::dic.samples()} to be found 
+    in the \code{rjags} package. It allows for assessing the 
     deviance information criterion.
 }
 \seealso{
-\code{autocorr.diag}, \code{coda}
+\code{dic.samples}, \code{coda}
 }

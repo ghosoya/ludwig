@@ -9,7 +9,7 @@ auto(x, ...)
 \arguments{
 \item{x}{an object of class \code{estnet_bayes}}
 
-\item{...}{other arguments passed over to \code{qgraph}}
+\item{...}{other arguments passed over to \code{autocorr.diag()}}
 }
 \description{
 This function is a wrapper around \code{autocorr.diag} to be found 

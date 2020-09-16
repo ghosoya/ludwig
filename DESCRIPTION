@@ -1,8 +1,8 @@
 Package: ludwig
 Title: Simulating and Estimating Undirected Binary Networks Using the
     Pseudolikelihood Method
-Version: 0.0.1.9002
-Authors@R: c(person("Georg", "Hosoya", email = "georg.hosoya@fu-berlin.de", role = c("aut", "cre")),
+Version: 0.0.2
+Authors@R: c(person("Georg", "Hosoya", email = "hosoya@gmail.com", role = c("aut", "cre")),
             person("Maximilian", "Bee", email= "r.maximilian.bee@gmail.com", role = c("ctb")))
 Description: The package provides some basic functions for simulating,
     estimating and plotting binary networks. The estimation function is using the
@@ -15,9 +15,10 @@ LazyData: true
 Imports:
     glmnet (>= 2.0.5),
     qgraph (>= 1.3.4),
-    mcmcplots (>= 0.4.2)
+    mcmcplots (>= 0.4.2),
+    coda (>= 0.19-1)
 Suggests:
     rjags (>= 4.0)
 SystemRequirements: jags 4.2.0
 RoxygenNote: 6.1.1
-Date: 2019-04-24
+Date: 2020-09-20

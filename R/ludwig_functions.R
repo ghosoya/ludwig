@@ -110,7 +110,7 @@ print.estnet <- function(x, ...)
     cat("\n Alpha: ", x$alpha)
     cat("\n s:", x$s)
   }
-  cat("\n\n Entropy rate (bits):", x$entropy_rate)
+  cat("\n\n Entropy rate (bits/observation):", x$entropy_rate)
   cat("\n\n Time:", x$time)
 }
 ##########################################################
@@ -320,21 +320,143 @@ simnet <- function(k_sim, coef, n_burnin, n_rep, start_state, order = "random")
 #' @description This intended use of this function is helping cross-validate
 #'     an estimated network on new data. To this aim, the values of individual
 #'     nodes are predicted based on the conditional predictive distributions
-#'     and the relative frequency of correct predictions is returned.
+#'     and for each node Cohen's Kappa, sensitivity, specificity, prevalence and accuracy 
+#'     statistics are provided as well as the frequencies of true positives (TP),
+#'     true negatives (TN), false positives (FP) and false negatives (FN).
+#'     
+#'     In addition, Cohen's Kappa, sensitivity, specificity and accuracy of the 
+#'     predictions are reported for all nodes or, in other words, the whole network.
+#'    
 #'
 #' @param net An object of class estnet
-#' @param dat_val A validation dataset
-#' 
-#' @return The relative frequency of correct predictions.
+#' @param dat A validation dataset
+#' @param debug Debug information
+#' @return The function returns a list of class \code{\link{crossval}}, containing...
+#'   \itemize{
+#'   \item {\code{kappa}} {Cohen's Kappa for each item.}
+#'   \item {\code{sensitivity}} {Sensitivity of the predictions for each item.}
+#'   \item {\code{specificity}} {Specificity of the predictions for each item.}
+#'   \item {\code{accuracy}} {Accuracy of the predictions for each item.}
+#'   \item {\code{prevalence}} {Prevalence of the predictions for each item.}
+#'   \item {\code{TN}} {Number of true negative predictions for each item.}
+#'   \item {\code{FN}} {Number of false negative predictions for each item.}
+#'   \item {\code{FP}} {Number of false positive predictions for each item.}
+#'   \item {\code{TP}} {Number of true positive predictions for each item.}
+#'   \item {\code{kappa_total}} {Cohen's Kappa for the whole network.}
+#'   \item {\code{sensi_total}} {Sensitivity for the whole network.}
+#'   \item {\code{speci_total}} {Specificity for the whole network.}
+#'   \item {\code{accu_total}} {Accuracy for the whole network.}
+#'   \item {\code{k}} {Number of items.}
+#'   }
+#'   
 
-crossval <- function(net, dat_val)
+crossval <- function(net, dat, debug = FALSE)
 {
-  res <- create_matrix(dat_val)
-  coef <- coef(net)
+  res <- create_matrix(dat)
+  coef <- net$coef
   pred <- round(exp(res$predict_matrix %*% coef) / (1 + exp(res$predict_matrix %*% coef)))
-  return(mean(pred == res$y))
+  result <- NULL
+  
+  n<-dim(dat)[1] # Number of states
+  k<-dim(dat)[2] # Number of items
+  pred_mat<-matrix(pred, ncol=k, byrow=FALSE)
+  
+  # True negatives
+  TN<-apply(dat==0 & pred_mat==0, 2, sum)
+  # True positive
+  TP<-apply(dat==1 & pred_mat==1, 2, sum)
+  # False negatives
+  FN<-apply(dat==1 & pred_mat==0, 2, sum)
+  # False positives
+  FP<-apply(dat==0 & pred_mat==1, 2, sum)
+  
+  # Compute item specific Kappas
+  p_null<-(TN+TP)/(TN+TP+FN+FP)
+  p_yes <- ((TP+FP)*(TP+FN))/(TN+TP+FN+FP)^2
+  p_no  <- ((FN+TN)*(FP+TN))/(TN+TP+FN+FP)^2
+  p_e<-p_yes+p_no
+  kappa<-(p_null-p_e)/(1-p_e)
+  
+  # Item-specific Sensitivity (true positive rate)
+  sensi <- (TP)/(TP+FN)
+  # Item-specific Specificity (true negative rate)
+  speci <- (TN)/(TN+FP)
+  # Item-specific accuracy
+  accuracy <- (TP+TN)/(TN+TP+FN+FP)
+  # Item-specific prevalence
+  prevalence <- apply(dat,2,mean)
+  
+  # Compute statistics for all predictions
+  sum_TP = sum(TP)
+  sum_FP = sum(FP)
+  sum_TN = sum(TN)
+  sum_FN = sum(FN)
+  
+  # Total level sensitivity
+  sensi_total <- sum_TP/(sum_TP+sum_FN)
+  # Total level specificity
+  speci_total <- sum_TN/(sum_TN+sum_FP)
+  # Total level accuracy
+  accu_total <- (sum_TP+sum_TN)/(sum_TN+sum_TP+sum_FN+sum_FP)
+  # Kappa total
+  p_null_total<- (sum_TN+sum_TP)/(sum_TN+sum_TP+sum_FN+sum_FP)
+  p_yes_total <- ((sum_TP+sum_FP)*(sum_TP+sum_FN))/(sum_TN+sum_TP+sum_FN+sum_FP)^2
+  p_no_total  <- ((sum_FN+sum_TN)*(sum_FP+sum_TN))/(sum_TN+sum_TP+sum_FN+sum_FP)^2
+  p_e_total <- p_yes_total+p_no_total
+  kappa_total <- (p_null_total-p_e_total)/(1-p_e_total)
+  
+  result$kappa <- kappa
+  result$sensi <- sensi
+  result$speci <- speci
+  result$accuracy <- accuracy
+  result$prevalence <- prevalence
+  result$TN <- TN
+  result$FN <- FN
+  result$FP <- FP
+  result$TP <- TP
+  result$kappa_total <- kappa_total
+  result$sensi_total <- sensi_total
+  result$speci_total <- speci_total
+  result$accu_total <- accu_total
+  result$k <- k
+  
+  class(result) <- "crossval"
+  return(result)
 }
 
+############################################################
+#' Print the results 
+#' 
+#' @description This function prints the results of the cross-validation procedure.
+#'     
+#' @param x An object of class \code{crossval}
+#' @param ... other arguments (not used)
+#' @export
+print.crossval <- function(x, ...)
+{
+  # Rownames
+  rnames<-NULL;
+  for(i in seq(x$k))
+  {
+    rnames[i] <- paste0("Item ", i )
+  }
+ 
+  out_item <- cbind(round(x$kappa,3), round(x$sensi,3), round(x$speci,3), 
+             round(x$accuracy,3), round(x$prevalence,3), x$TN, x$FN, x$FP, x$TP)
+  colnames(out_item) <- c("Kappa", "Sensi", "Speci", "Accu", 
+                        "Preval", "TN", "FN", "FP", "TP")
+  rownames(out_item) <- rnames
+  cat("Item level:\n")
+  print(out_item)
+  cat("\nGlobal level:\n")
+  out_global <- cbind(round(x$kappa_total,3), round(x$sensi_total,3), round(x$speci_total,3),
+                    round(x$accu_total,3))
+  
+  #rownames(out_global)<-rnames
+  colnames(out_global) <- c("Kappa", "Sensi", "Speci", "Accuracy")
+  
+  print(out_global)
+}
 ##########################################################
 #' Determine the posterior distributions of the network parameters given an observed state matrix 
 #' 
@@ -359,6 +481,7 @@ crossval <- function(net, dat_val)
 #'   \item {\code{merged chains}} { the merged MCMC chains}
 #'   \item {\code{used_samples}} { the actual number of samples to assess the posterior distributions}
 #'   \item {\code{posterior_means}} { the parameter's posterior means}
+#'   \item {\code{coef}} { the parameter's posterior means}
 #'   \item {\code{posterior_sd}} { the parameter's posterior standard deviations}
 #'   \item {\code{weights}} { a matrix of the network parameter's posterior means}
 #'   \item {\code{weights_sd}} { a matrix of the network parameter's posterior standard deviations}
@@ -371,6 +494,7 @@ crossval <- function(net, dat_val)
 #'   \item {\code{n_iter}} {number of iterations}
 #'   \item {\code{actual}} {actual iterations used to compute the posterior statistics}
 #'   \item {\code{time}} { the time used for the estimation process}
+#'   \item {\code{jags}} { the JAGS model object}
 #'   }
 #'   
 #' @examples
@@ -391,7 +515,7 @@ estnet_bayes <- function(data, n_chains = 2, n_iter = 1000, n_burnin= 1000, n_ad
   }
   
   storage.mode(data) <- "integer"
-  load.module("glm")
+  rjags::load.module("glm")
   
   start.time <- Sys.time()
   # Create design matrix
@@ -411,7 +535,7 @@ estnet_bayes <- function(data, n_chains = 2, n_iter = 1000, n_burnin= 1000, n_ad
   # Inits drawn from a standard normal distribution
   inits <- function() { list(beta = rnorm(p)) }
   
-  jags <- jags.model(file = textConnection(log_reg),
+  jags <- rjags::jags.model(file = textConnection(log_reg),
                      data = data,
                      inits = inits,
                      n.chains = n_chains,
@@ -420,13 +544,14 @@ estnet_bayes <- function(data, n_chains = 2, n_iter = 1000, n_burnin= 1000, n_ad
   update(jags, n_adapt)
   
   # Coda Samples
-  s_coda <- coda.samples(jags,
+  s_coda <- rjags::coda.samples(jags,
                          parameters,
                          n.iter = n_iter,
                          thin = n_thin)
   
   # Merge chains
-  merged_chains <- mcmc(do.call(rbind, s_coda))
+  merged_chains <- coda::mcmc(do.call(rbind, s_coda))
+  
   # Compute posterior M
   posterior_means <- apply(merged_chains, 2, mean)
   
@@ -468,13 +593,14 @@ estnet_bayes <- function(data, n_chains = 2, n_iter = 1000, n_burnin= 1000, n_ad
   res$entropy_rate<-mean(-((res$fitted)*log(res$fitted,2)+(1-res$fitted)*log(1-res$fitted,2)))
   res$logL <- sum(log(exp(res$predict_matrix %*% posterior_means) ^ res$y / (1 + exp(res$predict_matrix %*% posterior_means))))
   res$deviance <- -2 * res$logL
-  res$merged_chains <- mcmc(do.call(rbind, s_coda)) # Combined chains
+  res$merged_chains <- merged_chains # Combined chains
   res$used_samples <- dim(merged_chains) # Actual Samples
   res$posterior_means <- apply(merged_chains, 2, mean)
+  res$coef <- apply(merged_chains, 2, mean)
   res$posterior_sd <- apply(merged_chains, 2, sd)
   res$weights <- weights # weight posterior means matrix
   res$weights_sd <- weights_sd # weights posterior sd matrix
-  res$thresholds <- posterior_means[seq_len(res$k)] # Thresholds posterior means
+  res$thresholds <- posterior_means[seq_len(res$k)] # Thresholds posterior means  
   res$thresholds_sd <- posterior_sd[seq_len(res$k)] # Thresholds posterior SD
   res$n_chains<-n_chains
   res$thinning<-n_thin
@@ -482,6 +608,7 @@ estnet_bayes <- function(data, n_chains = 2, n_iter = 1000, n_burnin= 1000, n_ad
   res$iter<-n_iter
   res$actual<-dim(res$merged_chains)[1]
   res$time <- Sys.time() - start.time
+  res$jags <- jags
   
   class(res) <- "estnet_bayes"
   return(res)
@@ -533,24 +660,28 @@ print.estnet_bayes <- function(x, ...)
 #'     so all of qgraph's functionality should be available.
 #' 
 #' @param x an object of class \code{estnet_bayes}
-#' @param thresh a threshold in terms of posterior mean divided by posterior sd. 
+#' @param z_crit a threshold in terms of posterior mean divided by posterior sd. 
 #'     For instance, setting the threshold to 2 removes all edges for which the 
-#'     absolute qoutient of posterior mean and posterior sd is smaller than 2.
+#'     absolute qoutient of posterior mean and posterior sd is smaller than 2. 
+#'     The value is similar to a critical z-value.
 #'     This is useful for removing edges with small parameter values.
 #' @param ... other arguments passed over to \code{qgraph}
 #' 
 #' @seealso \code{\link[qgraph]{qgraph}}
 #' @export
-plot.estnet_bayes <- function(x, thresh = 0, ...)
+plot.estnet_bayes <- function(x, z_crit = 0, ...)
 {
-  qgraph(x$weights, ...)
-  cat("Bayes")
-  
-  if(thresh!=0)
+ 
+  if(z_crit!=0)
   {
-      w <- x$weights*(x$weights/x$weights_sd>threshold|x$weights/x$weights_sd< -threshold)
+      w <- x$weights*(x$weights/x$weights_sd>z_crit|x$weights/x$weights_sd< -z_crit)
       diag(w)<-0
       qgraph(w, ...)
+  }
+  else
+  {
+      qgraph(x$weights, ...)
+      cat("Bayes")
   }
 }
 ##########################################################
@@ -568,7 +699,7 @@ plot.estnet_bayes <- function(x, thresh = 0, ...)
 #' @export
 R_hat<-function(x, ...)
 {
-  gelman.diag(x$s_coda, ...)
+  coda::gelman.diag(x$s_coda, ...)
 }
 
 ##########################################################
@@ -579,13 +710,13 @@ R_hat<-function(x, ...)
 #'     for the Markov chains
 #' 
 #' @param x an object of class \code{estnet_bayes}
-#' @param ... other arguments passed over to \code{qgraph}
+#' @param ... other arguments passed over to \code{autocorr.diag()}
 #' 
 #' @seealso \code{autocorr.diag}, \code{coda}
 #' @export
 auto<-function(x, ...)
 {
- autocorr.diag(x$s_coda, ...) 
+ coda::autocorr.diag(x$s_coda, ...) 
 }
 #########################################################
 #' Diagnostic plots
@@ -595,7 +726,7 @@ auto<-function(x, ...)
 #'     assessment of the Markov chains and the autocorrelation in a Web browser.
 #' 
 #' @param x an object of class \code{estnet_bayes}
-#' @param ... other arguments passed over to \code{qgraph}
+#' @param ... other arguments passed over to \code{mcmcplot}
 #' 
 #' @seealso \code{autocorr.diag}, \code{coda}
 #' @export
@@ -606,18 +737,18 @@ diag_plot<-function(x, ...)
 #########################################################
 #' Deviance information criterion
 #'
-#' @description This function is a wrapper around \code{DIC} to be found 
-#'     in the \code{coda} package. It allows for assessing the 
+#' @description This function is a wrapper around \code{rjags::dic.samples()} to be found 
+#'     in the \code{rjags} package. It allows for assessing the 
 #'     deviance information criterion.
 #' 
 #' @param x an object of class \code{estnet_bayes}
-#' @param ... other arguments passed over to \code{qgraph}
+#' @param ... other arguments passed over to \code{dic.samples()}
 #' 
-#' @seealso \code{autocorr.diag}, \code{coda}
+#' @seealso \code{dic.samples}, \code{coda}
 #' @export
 DIC<-function(x, ...)
 {
-  dic.samples(x$s_coda, ...)
+ rjags::dic.samples(x$jags, ...)
 }
 
 ########################################################

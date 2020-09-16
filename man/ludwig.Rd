@@ -4,7 +4,7 @@
 \name{ludwig}
 \alias{ludwig}
 \alias{ludwig-package}
-\title{ludwig: Simulating and Estimating Undirected Binary Networks}
+\title{: Simulating and Estimating Undirected Binary Networks}
 \description{
 The purpose of this package is to provide some tools for methodological
     researchers interested in exploring undirected binary networks.
@@ -19,18 +19,28 @@ The purpose of this package is to provide some tools for methodological
     estimator (MPE) seem to be unexplored (see Strauss, 1992). 
     Similar to the package \code{IsingFit} by van Borkulo, Epskamp and Robitzsch (2014), this package uses 
     regularized logistic regression (package \code{\link[glmnet]{glmnet}}) by default. In addition, the use of 
-    the standard package \code{\link[stats]{glm}} is available.
+    the standard package \code{\link[stats]{glm}} is available. 
+    
+    Note that Bayesian estimation is only available when 
+    JAGS \href{http://mcmc-jags.sourceforge.net.}{http://mcmc-jags.sourceforge.net.} is installed.
 }
 \section{Functions}{
 
 
   \itemize{
-   \item {\code{\link{estnet}}} {Estimate the network parameters}.
+   \item {\code{\link{estnet}}} {Estimate the network parameters using regularized logistic regression using \code{\link[glmnet]{glmnet}}}.
    \item {\code{\link{simnet}}} {Simulate data from a network using probabilistic sequential node updating}.
-   \item {\code{\link{create_matrix}}} {An internal function to create the predictor matrix and data vector for maximum pseudolikelihood estimation. 
-               Note that the function could be optimized for speed.}
+   \item {\code{\link{create_matrix}}} {An internal function to create the predictor matrix and data vector for maximum pseudolikelihood estimation}.
    \item {\code{\link{print.estnet}}} {Print the results of the analysis}.
    \item {\code{\link{plot.estnet}}} {Plot the results of the analysis using \code{\link[qgraph]{qgraph}}}.
+   \item {\code{\link{crossval}}} {A crossvalidation function to assess the network's predictive capabilities on the global and node levels}.
+   \item {\code{\link{estnet_bayes}}} {Bayesian estimation of the network parameters using \code{rjags}}.
+   \item {\code{\link{print.estnet_bayes}}} {Prints the results of the Bayesian estimation}.
+   \item {\code{\link{plot.estnet_bayes}}} {Plot the results of the analysis using \code{\link[qgraph]{qgraph}}}.
+   \item {\code{\link{R_hat}}} {Prints the Gelman-Rubin-Statistic for the Markov chains via \code{gelman.diag}}.
+   \item {\code{\link{auto}}} {Prints autocorrelation of the chains via \code{autocorr.diag}}.
+   \item {\code{\link{diag_plot}}} {Visualizes the chains and convergence diagnostics via \code{mcmcplot}}.
+   \item {\code{\link{DIC}}} {Assesses the deviance information criterion (DIC) via \code{dic.samples}}.
   }
 }
 

@@ -2,6 +2,7 @@
 
 S3method(plot,estnet)
 S3method(plot,estnet_bayes)
+S3method(print,crossval)
 S3method(print,estnet)
 S3method(print,estnet_bayes)
 export(DIC)

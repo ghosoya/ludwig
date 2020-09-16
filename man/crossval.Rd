@@ -4,19 +4,42 @@
 \alias{crossval}
 \title{Cross-validate network on new data}
 \usage{
-crossval(net, dat_val)
+crossval(net, dat, debug = FALSE)
 }
 \arguments{
 \item{net}{An object of class estnet}
 
-\item{dat_val}{A validation dataset}
+\item{dat}{A validation dataset}
+
+\item{debug}{Debug information}
 }
 \value{
-The relative frequency of correct predictions.
+The function returns a list of class \code{\link{crossval}}, containing...
+  \itemize{
+  \item {\code{kappa}} {Cohen's Kappa for each item.}
+  \item {\code{sensitivity}} {Sensitivity of the predictions for each item.}
+  \item {\code{specificity}} {Specificity of the predictions for each item.}
+  \item {\code{accuracy}} {Accuracy of the predictions for each item.}
+  \item {\code{prevalence}} {Prevalence of the predictions for each item.}
+  \item {\code{TN}} {Number of true negative predictions for each item.}
+  \item {\code{FN}} {Number of false negative predictions for each item.}
+  \item {\code{FP}} {Number of false positive predictions for each item.}
+  \item {\code{TP}} {Number of true positive predictions for each item.}
+  \item {\code{kappa_total}} {Cohen's Kappa for the whole network.}
+  \item {\code{sensi_total}} {Sensitivity for the whole network.}
+  \item {\code{speci_total}} {Specificity for the whole network.}
+  \item {\code{accu_total}} {Accuracy for the whole network.}
+  \item {\code{k}} {Number of items.}
+  }
 }
 \description{
 This intended use of this function is helping cross-validate
     an estimated network on new data. To this aim, the values of individual
     nodes are predicted based on the conditional predictive distributions
-    and the relative frequency of correct predictions is returned.
+    and for each node Cohen's Kappa, sensitivity, specificity, prevalence and accuracy 
+    statistics are provided as well as the frequencies of true positives (TP),
+    true negatives (TN), false positives (FP) and false negatives (FN).
+    
+    In addition, Cohen's Kappa, sensitivity, specificity and accuracy of the 
+    predictions are reported for all nodes or, in other words, the whole network.
 }
