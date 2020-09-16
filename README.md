@@ -11,6 +11,6 @@ a network using conditional distributions.
 New in Version 0.0.2
 
 Bayesian estimation (MCMC) via JAGS as well as functionality for 
-cross-validating estmated networks has been added.
+cross-validating estimated networks has been added.
 
 Please note that this is a development version.
